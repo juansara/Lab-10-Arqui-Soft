@@ -5,3 +5,8 @@
 2025-05-28 19:39:46 {main} {search_pokemon} /poke/search search_pokemon Request received: {'Pokemon_Name': 'Chorizooo'}
 2025-05-28 19:39:47 {main} {search_pokemon} /poke/search search_pokemon Error: Client error '404 Not Found' for url 'https://pokeapi.co/api/v2/pokemon/chorizooo'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-28 20:02:50 {main} {search_pokemon} /poke/search search_pokemon Started for: charizard
+2025-05-28 20:02:50 {main} {search_pokemon} /poke/search API_CALL completed in 513.64ms - Status: SUCCESS
+2025-05-28 20:02:50 {main} {search_pokemon} /poke/search CSV_LOOKUP completed in 2.47ms - Status: SUCCESS
+2025-05-28 20:02:50 {main} {search_pokemon} /poke/search IMAGE_CHECK completed in 0.04ms - Status: FOUND
+2025-05-28 20:02:50 {main} {search_pokemon} /poke/search SUMMARY - Total: 516.57ms | API: 513.64ms | CSV: 2.47ms | IMG: 0.04ms
