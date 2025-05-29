@@ -1,0 +1,10 @@
+2025-05-28 20:44:26 {main} {get_pokemon_api_data} ==============================
+2025-05-28 20:44:26 {main} {get_pokemon_api_data} NEW API SESSION STARTED
+2025-05-28 20:44:26 {main} {get_pokemon_api_data} ==============================
+2025-05-28 20:44:26 {main} {get_pokemon_api_data} /api/search api_search Started for: charizard
+2025-05-28 20:44:26 {main} {before_retry_log} API_RETRY attempt #1 for Pokemon API call - Previous attempt failed
+2025-05-28 20:44:27 {main} {get_pokemon_api_data} /api/search API_CALL completed in 938.34ms - Status: SUCCESS (after 1 retries)
+2025-05-28 20:44:27 {main} {get_pokemon_api_data} /api/search SUMMARY - Total: 938.67ms | API: 938.34ms | Retries: 1
+2025-05-28 20:44:27 {main} {get_pokemon_api_data} ------------------------------
+2025-05-28 20:44:27 {main} {get_pokemon_api_data} API SESSION COMPLETED - CHARIZARD - 938.67ms
+2025-05-28 20:44:27 {main} {get_pokemon_api_data} ------------------------------

@@ -1,0 +1,9 @@
+2025-05-28 20:44:52 {main} {get_pokemon_stats} ==============================
+2025-05-28 20:44:52 {main} {get_pokemon_stats} NEW STATS SESSION STARTED
+2025-05-28 20:44:52 {main} {get_pokemon_stats} ==============================
+2025-05-28 20:44:52 {main} {get_pokemon_stats} /stats/search stats_search Started for: charizard
+2025-05-28 20:44:52 {main} {get_pokemon_stats} /stats/search CSV_LOOKUP completed in 2.19ms - Status: SUCCESS
+2025-05-28 20:44:52 {main} {get_pokemon_stats} /stats/search SUMMARY - Total: 2.37ms | CSV: 2.19ms
+2025-05-28 20:44:52 {main} {get_pokemon_stats} ------------------------------
+2025-05-28 20:44:52 {main} {get_pokemon_stats} STATS SESSION COMPLETED - CHARIZARD - 2.37ms
+2025-05-28 20:44:52 {main} {get_pokemon_stats} ------------------------------

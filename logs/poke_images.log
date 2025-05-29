@@ -1,0 +1,9 @@
+2025-05-28 20:44:41 {main} {get_pokemon_images} ==============================
+2025-05-28 20:44:41 {main} {get_pokemon_images} NEW IMAGES SESSION STARTED
+2025-05-28 20:44:41 {main} {get_pokemon_images} ==============================
+2025-05-28 20:44:41 {main} {get_pokemon_images} /images/search images_search Started for: charizard
+2025-05-28 20:44:41 {main} {get_pokemon_images} /images/search IMAGE_SCAN completed in 0.23ms - Status: FOUND_5_IMAGES
+2025-05-28 20:44:41 {main} {get_pokemon_images} /images/search SUMMARY - Total: 0.33ms | IMG: 0.23ms
+2025-05-28 20:44:41 {main} {get_pokemon_images} ------------------------------
+2025-05-28 20:44:41 {main} {get_pokemon_images} IMAGES SESSION COMPLETED - CHARIZARD - 0.33ms
+2025-05-28 20:44:41 {main} {get_pokemon_images} ------------------------------
