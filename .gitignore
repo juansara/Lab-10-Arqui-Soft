@@ -56,3 +56,6 @@ venv.bak/
 # OS files
 .DS_Store
 Thumbs.db
+
+/data/images
+/data/stats
