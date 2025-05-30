@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 import pandas as pd
 import time
-from .logger import get_logger
+from .logger import get_logger, log_request
 from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Pokemon Stats Service", version="1.0.0")
@@ -16,23 +16,41 @@ async def get_pokemon_stats(payload: dict, request: Request):
     name = payload.get("Pokemon_Name", "").lower()
     start = time.time()
 
-    logger.info(f"Start - name={name}", extra={"module": "poke_stats", "endpoint": "/stats/search"})
-
     try:
         stats = lookup.get(name)
+        duration = round((time.time() - start) * 1000, 2)
 
         if stats:
-            duration = round((time.time() - start) * 1000, 2)
-            logger.info(f"Done - stats found in {duration}ms", extra={"module": "poke_stats", "endpoint": "/stats/search"})
-            logger.info("Status - success", extra={"module": "poke_stats", "endpoint": "/stats/search"})
+            log_request(
+                logger=logger,
+                service_name="poke_stats",
+                endpoint="/stats/search",
+                status_code=200,
+                latency_ms=duration,
+                message=f"Found stats for {name}"
+            )
             return {"name": name, "stats": stats}
-
         else:
-            logger.info("Status - not found", extra={"module": "poke_stats", "endpoint": "/stats/search"})
+            log_request(
+                logger=logger,
+                service_name="poke_stats",
+                endpoint="/stats/search",
+                status_code=404,
+                latency_ms=duration,
+                message=f"Stats not found for {name}"
+            )
             return JSONResponse(status_code=404, content={"error": f"{name} not found"})
 
     except Exception as e:
-        logger.error(f"Error - {type(e).__name__}: {str(e)}", extra={"module": "poke_stats", "endpoint": "/stats/search"})
+        duration = round((time.time() - start) * 1000, 2)
+        log_request(
+            logger=logger,
+            service_name="poke_stats",
+            endpoint="/stats/search",
+            status_code=500,
+            latency_ms=duration,
+            message=f"Error: {str(e)}"
+        )
         return JSONResponse(status_code=500, content={"error": f"Failed to get stats for {name}"})
 
 

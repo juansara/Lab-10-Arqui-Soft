@@ -1,0 +1,7 @@
+2025-05-30 03:14:01|poke_api|/api/search|0|0|Retry attempt #1
+2025-05-30 03:14:01|poke_api|/api/search|200|232.15|Found 6 stats for pikachu (retries: 1)
+2025-05-30 03:14:02|poke_api|/api/search|0|0|Retry attempt #1
+2025-05-30 03:14:02|poke_api|/api/search|500|193.6|Error: Client error '404 Not Found' for url 'https://pokeapi.co/api/v2/pokemon/invalidpokemon123'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-30 03:14:06|poke_api|/api/search|0|0|Retry attempt #1
+2025-05-30 03:14:06|poke_api|/api/search|200|194.78|Found 6 stats for pikachu (retries: 1)

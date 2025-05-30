@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 import os
 import glob
 import time
-from .logger import get_logger
+from .logger import get_logger, log_request
 from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Pokemon Images Service", version="1.0.0")
@@ -13,21 +13,47 @@ async def get_pokemon_images(payload: dict, request: Request):
     name = payload.get("Pokemon_Name", "").lower()
     start = time.time()
 
-    logger.info(f"Start - name={name}", extra={"module": "poke_images", "endpoint": "/images/search"})
-
     try:
         image_folder = f"data/images/{name}"
         image_files = sorted(glob.glob(f"{image_folder}/*.jpg"))
         images = [f"/data/images/{name}/{os.path.basename(img)}" for img in image_files]
         duration = round((time.time() - start) * 1000, 2)
 
-        logger.info(f"Done - {len(images)} images in {duration}ms", extra={"module": "poke_images", "endpoint": "/images/search"})
-        logger.info("Status - success", extra={"module": "poke_images", "endpoint": "/images/search"})
+        if not images:
+            log_request(
+                logger=logger,
+                service_name="poke_images",
+                endpoint="/images/search",
+                status_code=500,
+                latency_ms=duration,
+                message=f"No images found for {name}"
+            )
+            return JSONResponse(
+                status_code=500,
+                content={"error": f"No images found for {name}"}
+            )
+
+        log_request(
+            logger=logger,
+            service_name="poke_images",
+            endpoint="/images/search",
+            status_code=200,
+            latency_ms=duration,
+            message=f"Found {len(images)} images for {name}"
+        )
 
         return {"name": name, "images": images}
 
     except Exception as e:
-        logger.error(f"Error - {type(e).__name__}: {str(e)}", extra={"module": "poke_images", "endpoint": "/images/search"})
+        duration = round((time.time() - start) * 1000, 2)
+        log_request(
+            logger=logger,
+            service_name="poke_images",
+            endpoint="/images/search",
+            status_code=500,
+            latency_ms=duration,
+            message=f"Error: {str(e)}"
+        )
         return JSONResponse(status_code=500, content={"error": f"Failed to get images for {name}"})
 
 

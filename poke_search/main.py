@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import httpx, time
-from .logger import get_logger
+from .logger import get_logger, log_request
 
 app = FastAPI()
 logger = get_logger("poke_search")
@@ -9,56 +9,63 @@ logger = get_logger("poke_search")
 @app.post("/poke/search")
 async def search_pokemon(payload: dict, request: Request):
     name = payload.get("Pokemon_Name", "").lower()
-    logger.info(f"Start - name={name}", extra={"service": "poke_search", "path": "/poke/search"})
-
+    overall_start = time.time()
     results = {"name": name}
     success = 0
     total = 3
 
     async with httpx.AsyncClient() as client:
+
         # --- /api/search ---
+        api_start = time.time()
         try:
             res_api = await client.post("http://127.0.0.1:8003/api/search", json={"Pokemon_Name": name})
             res_api.raise_for_status()
             results["api_data"] = res_api.json()
-            logger.info("api/search - success", extra={"service": "poke_search", "path": "/poke/search"})
+            duration = round((time.time() - api_start) * 1000, 2)
+            log_request(logger, "poke_search", "/api/search", 200, duration, f"API search ok for {name}")
             success += 1
         except Exception as e:
+            duration = round((time.time() - api_start) * 1000, 2)
+            log_request(logger, "poke_search", "/api/search", 500, duration, f"API search error: {str(e)}")
             results["api_data"] = {"error": str(e)}
-            logger.error(f"api/search - error - {type(e).__name__}: {str(e)}", extra={"service": "poke_search", "path": "/poke/search"})
 
         # --- /stats/search ---
+        stats_start = time.time()
         try:
             res_stats = await client.post("http://127.0.0.1:8001/stats/search", json={"Pokemon_Name": name})
             res_stats.raise_for_status()
             results["stats_data"] = res_stats.json()
-            logger.info("stats/search - success", extra={"service": "poke_search", "path": "/poke/search"})
+            duration = round((time.time() - stats_start) * 1000, 2)
+            log_request(logger, "poke_search", "/stats/search", 200, duration, f"Stats search ok for {name}")
             success += 1
         except Exception as e:
+            duration = round((time.time() - stats_start) * 1000, 2)
+            log_request(logger, "poke_search", "/stats/search", 500, duration, f"Stats search error: {str(e)}")
             results["stats_data"] = {"error": str(e)}
-            logger.error(f"stats/search - error - {type(e).__name__}: {str(e)}", extra={"service": "poke_search", "path": "/poke/search"})
 
         # --- /images/search ---
+        img_start = time.time()
         try:
             res_img = await client.post("http://127.0.0.1:8002/images/search", json={"Pokemon_Name": name})
             res_img.raise_for_status()
             results["images"] = res_img.json()
-            logger.info("images/search - success", extra={"service": "poke_search", "path": "/poke/search"})
+            duration = round((time.time() - img_start) * 1000, 2)
+            log_request(logger, "poke_search", "/images/search", 200, duration, f"Images search ok for {name}")
             success += 1
         except Exception as e:
+            duration = round((time.time() - img_start) * 1000, 2)
+            log_request(logger, "poke_search", "/images/search", 500, duration, f"Images search error: {str(e)}")
             results["images"] = {"error": str(e)}
-            logger.error(f"images/search - error - {type(e).__name__}: {str(e)}", extra={"service": "poke_search", "path": "/poke/search"})
 
-    # --- Final status ---
-    if success == total:
-        logger.info("Status - success", extra={"service": "poke_search", "path": "/poke/search"})
-        return results
-    elif success > 0:
-        logger.info("Status - partial", extra={"service": "poke_search", "path": "/poke/search"})
-        return JSONResponse(content=results, status_code=207)
-    else:
-        logger.info("Status - failure", extra={"service": "poke_search", "path": "/poke/search"})
-        return JSONResponse(content=results, status_code=500)
+    # --- Final result ---
+    total_duration = round((time.time() - overall_start) * 1000, 2)
+    final_status = 200 if success == total else (207 if success > 0 else 500)
+    status_text = "success" if success == total else ("partial" if success > 0 else "failure")
+
+    log_request(logger, "poke_search", "/poke/search", final_status, total_duration, f"Overall status: {status_text} for {name}")
+
+    return JSONResponse(content=results, status_code=final_status)
 
 
 

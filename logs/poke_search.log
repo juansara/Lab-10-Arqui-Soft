@@ -1,0 +1,15 @@
+2025-05-30 03:14:01|poke_search|/api/search|200|239.11|API search ok for pikachu
+2025-05-30 03:14:01|poke_search|/stats/search|200|2.67|Stats search ok for pikachu
+2025-05-30 03:14:01|poke_search|/images/search|200|2.15|Images search ok for pikachu
+2025-05-30 03:14:01|poke_search|/poke/search|200|403.01|Overall status: success for pikachu
+2025-05-30 03:14:02|poke_search|/api/search|500|196.96|API search error: Server error '500 Internal Server Error' for url 'http://127.0.0.1:8003/api/search'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+2025-05-30 03:14:02|poke_search|/stats/search|500|2.58|Stats search error: Client error '404 Not Found' for url 'http://127.0.0.1:8001/stats/search'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-30 03:14:02|poke_search|/images/search|500|2.53|Images search error: Server error '500 Internal Server Error' for url 'http://127.0.0.1:8002/images/search'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+2025-05-30 03:14:02|poke_search|/poke/search|500|353.38|Overall status: failure for invalidpokemon123
+2025-05-30 03:14:06|poke_search|/api/search|200|197.63|API search ok for pikachu
+2025-05-30 03:14:06|poke_search|/stats/search|200|2.37|Stats search ok for pikachu
+2025-05-30 03:14:06|poke_search|/images/search|200|1.93|Images search ok for pikachu
+2025-05-30 03:14:06|poke_search|/poke/search|200|343.14|Overall status: success for pikachu
