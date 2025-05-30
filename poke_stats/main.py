@@ -1,13 +1,56 @@
 from fastapi import FastAPI, Request
 import pandas as pd
 import time
+import json
+import threading
 from .logger import get_logger
+from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Pokemon Stats Service", version="1.0.0")
 logger = get_logger("poke_stats")
 
-# Load CSV once at startup
+# Load CSV once at startup and clean NaN values
 poke_stats_df = pd.read_csv("data/poke_stats/pokemon.csv")
+
+# Fill NaN values with appropriate defaults
+poke_stats_df = poke_stats_df.fillna({
+    'Type 2': '',  # Empty string for missing Type 2
+    'Name': '',
+    'Type 1': '',
+    'Total': 0,
+    'HP': 0,
+    'Attack': 0,
+    'Defense': 0,
+    'Sp. Atk': 0,
+    'Sp. Def': 0,
+    'Speed': 0,
+    'Generation': 0,
+    'Legendary': False
+})
+
+def safe_json_serialize(data):
+    """Convert pandas/numpy data types to JSON-safe types"""
+    if isinstance(data, dict):
+        return {k: safe_json_serialize(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [safe_json_serialize(item) for item in data]
+    elif pd.isna(data):
+        return None
+    elif hasattr(data, 'item'):  # numpy/pandas scalar
+        value = data.item()
+        return None if pd.isna(value) else value
+    else:
+        return data
+
+# Build a fast lookup dictionary from the DataFrame at startup
+pokemon_lookup = {}
+for _, row in poke_stats_df.iterrows():
+    name_key = str(row['Name']).lower()
+    # Convert row to dict and clean it
+    row_dict = safe_json_serialize(row.to_dict())
+    pokemon_lookup[name_key] = row_dict
+
+logger.info(f"Loaded {len(pokemon_lookup)} Pokemon records into memory for fast lookup")
 
 @app.post("/stats/search")
 async def get_pokemon_stats(payload: dict, request: Request):
@@ -21,12 +64,14 @@ async def get_pokemon_stats(payload: dict, request: Request):
     logger.info(f"{request.url.path} stats_search Started for: {name}")
 
     try:
-        # CSV lookup with timing
+        # Fast dictionary lookup instead of DataFrame operations
         csv_start = time.time()
-        row = poke_stats_df[poke_stats_df['Name'].str.lower() == name]
-        stats_csv = row.to_dict(orient="records")[0] if not row.empty else {}
+        
+        # Direct dictionary lookup - much faster and thread-safe
+        stats_csv = pokemon_lookup.get(name, {})
+        
         csv_duration = round((time.time() - csv_start) * 1000, 2)
-        csv_status = "SUCCESS" if not row.empty else "NOT_FOUND"
+        csv_status = "SUCCESS" if stats_csv else "NOT_FOUND"
         
         logger.info(f"{request.url.path} CSV_LOOKUP completed in {csv_duration}ms - Status: {csv_status}")
         
@@ -65,17 +110,22 @@ async def get_pokemon_stats(payload: dict, request: Request):
         logger.error(f"STATS SESSION FAILED - {name.upper()} - {error_duration}ms")
         logger.info("-" * 30)
         
-        return {
-            "pokemon_info": {
-                "name": name,
-                "search_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
-            },
-            "error": {
-                "message": f"Failed to fetch stats for {name}",
-                "details": str(e)
-            },
-            "performance_metrics": {
-                "total_duration_ms": error_duration,
-                "status": "failed"
+        # Return error response with 500 status code
+        return JSONResponse(
+            status_code=500,
+            content={
+                "pokemon_info": {
+                    "name": name,
+                    "search_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+                },
+                "error": {
+                    "message": f"Failed to fetch stats for {name}",
+                    "details": str(e),
+                    "error_type": type(e).__name__
+                },
+                "performance_metrics": {
+                    "total_duration_ms": error_duration,
+                    "status": "failed"
+                }
             }
-        } 
+        ) 

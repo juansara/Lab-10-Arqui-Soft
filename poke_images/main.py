@@ -3,6 +3,7 @@ import os
 import glob
 import time
 from .logger import get_logger
+from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Pokemon Images Service", version="1.0.0")
 logger = get_logger("poke_images")
@@ -72,17 +73,22 @@ async def get_pokemon_images(payload: dict, request: Request):
         logger.error(f"IMAGES SESSION FAILED - {name.upper()} - {error_duration}ms")
         logger.info("-" * 30)
         
-        return {
-            "pokemon_info": {
-                "name": name,
-                "search_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
-            },
-            "error": {
-                "message": f"Failed to scan images for {name}",
-                "details": str(e)
-            },
-            "performance_metrics": {
-                "total_duration_ms": error_duration,
-                "status": "failed"
+        # Return error response with 500 status code
+        return JSONResponse(
+            status_code=500,
+            content={
+                "pokemon_info": {
+                    "name": name,
+                    "search_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+                },
+                "error": {
+                    "message": f"Failed to scan images for {name}",
+                    "details": str(e),
+                    "error_type": type(e).__name__
+                },
+                "performance_metrics": {
+                    "total_duration_ms": error_duration,
+                    "status": "failed"
+                }
             }
-        } 
+        ) 
