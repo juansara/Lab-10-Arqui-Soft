@@ -45,3 +45,19 @@
 2025-05-28 20:45:01 {main} {search_pokemon} ------------------------------
 2025-05-28 20:45:01 {main} {search_pokemon} SEARCH SESSION COMPLETED - CHARIZARD - 661.3ms
 2025-05-28 20:45:01 {main} {search_pokemon} ------------------------------
+2025-05-29 20:46:49 {main} {search_pokemon} ==============================
+2025-05-29 20:46:49 {main} {search_pokemon} NEW SEARCH SESSION STARTED
+2025-05-29 20:46:49 {main} {search_pokemon} ==============================
+2025-05-29 20:46:49 {main} {search_pokemon} /poke/search search_pokemon Started for: charizard
+2025-05-29 20:46:50 {main} {search_pokemon} /poke/search SUMMARY - Total: 1073.23ms
+2025-05-29 20:46:50 {main} {search_pokemon} ------------------------------
+2025-05-29 20:46:50 {main} {search_pokemon} SEARCH SESSION COMPLETED - CHARIZARD - 1073.23ms
+2025-05-29 20:46:50 {main} {search_pokemon} ------------------------------
+2025-05-29 20:48:59 {main} {search_pokemon} ==============================
+2025-05-29 20:48:59 {main} {search_pokemon} NEW SEARCH SESSION STARTED
+2025-05-29 20:48:59 {main} {search_pokemon} ==============================
+2025-05-29 20:48:59 {main} {search_pokemon} /poke/search search_pokemon Started for: charizard
+2025-05-29 20:49:01 {main} {search_pokemon} /poke/search SUMMARY - Total: 2452.45ms
+2025-05-29 20:49:01 {main} {search_pokemon} ------------------------------
+2025-05-29 20:49:01 {main} {search_pokemon} SEARCH SESSION COMPLETED - CHARIZARD - 2452.45ms
+2025-05-29 20:49:01 {main} {search_pokemon} ------------------------------
