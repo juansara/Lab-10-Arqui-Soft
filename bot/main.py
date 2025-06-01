@@ -8,6 +8,10 @@ def run_bot():
         if cmd.lower() in ["exit", "salir", "quit"]:
             break
 
+        # CheckLatency <module> <start-date> <end-date>
+        # CheckAvailability <module> -[Last5Days, Last7Days]
+        # RenderGraph - [Availability, Latency} <module> -[Last5Days, Last7Days]
+
         try:
             if cmd.startswith("CheckLatency"):
                 _, mod, start, end = cmd.split()
@@ -18,8 +22,8 @@ def run_bot():
                 check_availability(mod, period)
 
             elif cmd.startswith("RenderGraph"):
-                _, metric, period = cmd.split()
-                render_graph(metric, period)
+                _, metric, mod, period = cmd.split()
+                render_graph(metric, mod, period)
 
             else:
                 print("Comando no reconocido.")
